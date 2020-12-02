@@ -1,11 +1,14 @@
-"""
-No mem solve
-"""
-def find_number_pair(filename='input.txt', total=2020):
-    with open(filename) as f:
-        for i, line in enumerate(f):
-            with open(filename) as f2:
-                for j, line2 in enumerate(f2):
-                    if int(line) + int(line2) == total and i != j:
-                        return int(line) * int(line2)
-print(find_number_pair('input.txt'))
+import itertools
+from operator import mul
+from functools import reduce
+
+def find_number_comb(filename, n=2, total=2020):
+    for comb in itertools.combinations([int(row) for row in open(filename)], n):
+        if sum(comb) == total:
+            return reduce(mul, comb), comb
+
+# Solve 1.1
+print(find_number_comb('day1/input.txt'))
+
+# Solve 1.2
+print(find_number_comb('day1/input.txt', n=3))
