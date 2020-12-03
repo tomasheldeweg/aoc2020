@@ -10,6 +10,8 @@ def get_valid_entries(filename, method='charcount'):
             count += 1
     return count
 
+# 2.1
 print(get_valid_entries('day2/input.txt'))
 
+# 2.2
 print(get_valid_entries('day2/input.txt', method='position'))
