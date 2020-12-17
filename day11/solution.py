@@ -41,6 +41,13 @@ class Cell():
         else:
             raise NotImplementedError
 
+    def _check_occupied_neighbour(self, grid, x, y):
+        try:
+            return grid[y][x] == '#'
+        except IndexError:
+            reu
+
+
     def calc_neighbouring_occupants(self, grid):
         if self.value == '.':
             self.nr_adjacent_occupants = -1
@@ -52,12 +59,53 @@ class Cell():
         # Adjacency solve 11.1
         if self.method == 'adjacent':
             for x, y in ADJACENT_CELLS:
-                if 0 <= (self.x + x) < (max_x) and \
-                0 <= (self.y + y) < (max_y) and \
-                grid[self.y + y][self.x + x] == '#':
+                if 0 <= (self.x + x) < (max_x) and 0 <= (self.y + y) < (max_y) and grid[self.y + y][self.x + x] == '#':
                     count += 1
         elif self.method == 'line_of_sight':
+            # X directions
+            for x in range(self.x + 1, max_x):
+                val = grid[self.y][x]
+                if val == '#' or val== 'L':
+                    count += int(val == '#')
+                    break
+            for x in range(self.x - 1, -1, -1):
+                val = grid[self.y][x]
+                if val == '#' or val== 'L':
+                    count += int(val == '#')
+                    break
+            # Y directions                
+            for y in range(self.y + 1, max_y):
+                val = grid[y][self.x]
+                if val == '#' or val== 'L':
+                    count += int(val == '#')
+                    break
+            for y in range(self.y - 1, -1, -1):
+                val = grid[y][self.x]
+                if val == '#' or val== 'L':
+                    count += int(val == '#')
+                    break
             
+            for x, y in zip(range(self.x + 1, max_x), range(self.y + 1, max_y)):          
+                val = grid[y][x]
+                if val == '#' or val== 'L':
+                    count += int(val == '#')
+                    break
+            for x, y in zip(range(self.x + 1, max_x), range(self.y - 1, -1, -1)):          
+                val = grid[y][x]
+                if val == '#' or val== 'L':
+                    count += int(val == '#')
+                    break
+            for x, y in zip(range(self.x - 1, -1, -1), range(self.y + 1, max_y)):          
+                val = grid[y][x]
+                if val == '#' or val== 'L':
+                    count += int(val == '#')
+                    break
+            for x, y in zip(range(self.x - 1, -1, -1), range(self.y - 1, -1, -1)):          
+                val = grid[y][x]
+                if val == '#' or val== 'L':
+                    count += int(val == '#')
+                    break
+
         else:
             raise NotImplementedError
         # Line of sight solve 11.2
@@ -82,9 +130,11 @@ while (state := grid.get_state()) != prev_state:
     prev_state = state
 print(grid.get_state()[0])
 
+
 # Solve2
 grid = Grid(data, method='line_of_sight')
 prev_state = None
 while (state := grid.get_state()) != prev_state:
     grid.transform()
     prev_state = state
+print(grid.get_state()[0])
