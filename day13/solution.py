@@ -1,5 +1,7 @@
 from itertools import count
-with open('day13/test_input.txt') as f:
+from functools import reduce
+from operator import mul
+with open('day13/input.txt') as f:
     info = f.read().split('\n')
 
 current_time = int(info[0])
@@ -13,19 +15,16 @@ print(f"Closest bus: {closest_bus[0]}\nWait time {closest_bus[1]}\nSolution = {c
 
 # Solve 2
 busses = {int(x): minutes for minutes, x in enumerate(info[1].split(',')) if x != 'x'}
-_min, _max = min(busses.keys()), max(busses.keys())
-step = _min * _max
-print(step)
-offset_max = busses[_max]
 
-for i in count(0, step):
-    i -= offset_max
-    nr_matches = 0
-    for bus, offset in busses.items():
-        if not (offset + i) % bus:
-            nr_matches += 1
-        else:
+# Chinese remainder:
+max_product = reduce(mul, busses.keys())
+
+total = 0
+for divisor, remainder in busses.items():
+    N = int(max_product/divisor)
+    for x in count():
+        if (x * N) % divisor == 1:
             break
-    if nr_matches == len(busses):
-        print(i)
-        break
+    total += remainder * N * x
+
+print(max_product - total % max_product)
